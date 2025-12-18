@@ -26,13 +26,13 @@ public extension Graphiti.Field where Arguments == NoArguments, Context == Reque
     /// - Parameters:
     ///   - name: Field name
     ///   - keyPath: KeyPath to the @Parent property
-    convenience init(
+    convenience init<ParentType>(
         _ name: FieldKey,
-        with keyPath: KeyPath<ObjectType, ParentProperty<ObjectType, FieldType>>
-    ) where FieldType: Model {
+        with keyPath: KeyPath<ObjectType, ParentProperty<ObjectType, ParentType>>
+    ) where ParentType: Model {
         self.init(name.description) { type -> (Request, NoArguments) async throws -> FieldType in
             return { (context: Request, _: NoArguments) async throws in
-                return try await type[keyPath: keyPath].get(on: context.db) // Get the desired property and make the Fluent database query on it
+                return try await type[keyPath: keyPath].get(on: context.db) as! FieldType
             }
         }
     }
