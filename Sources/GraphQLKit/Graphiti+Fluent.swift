@@ -12,11 +12,11 @@ extension Graphiti.Field where Arguments == NoArguments, Context == Request, Obj
         _ name: FieldKey,
         with keyPath: KeyPath<ObjectType, ChildrenProperty<ObjectType, ChildType>>
     ) where FieldType == [ChildType] {
-        self.init(name.description, at: { type -> (Request, NoArguments) async throws -> [ChildType] in
+        self.init(name.description) { type -> (Request, NoArguments) async throws -> [ChildType] in
             return { (context: Request, _: NoArguments) async throws in
-                try await type[keyPath: keyPath].query(on: context.db).all()
+                try await type[keyPath: keyPath].query(on: context.db).all() // Get the desired property and make the Fluent database query on it
             }
-        })
+        }
     }
 }
 
@@ -30,11 +30,11 @@ public extension Graphiti.Field where Arguments == NoArguments, Context == Reque
         _ name: FieldKey,
         with keyPath: KeyPath<ObjectType, ParentProperty<ObjectType, FieldType>>
     ) where FieldType: Model {
-        self.init(name.description, at: { type -> (Request, NoArguments) async throws -> FieldType in
+        self.init(name.description) { type -> (Request, NoArguments) async throws -> FieldType in
             return { (context: Request, _: NoArguments) async throws in
-                return try await type[keyPath: keyPath].get(on: context.db)
+                return try await type[keyPath: keyPath].get(on: context.db) // Get the desired property and make the Fluent database query on it
             }
-        })
+        }
     }
 }
 
@@ -48,11 +48,11 @@ public extension Graphiti.Field where Arguments == NoArguments, Context == Reque
         _ name: FieldKey,
         with keyPath: KeyPath<ObjectType, SiblingsProperty<ObjectType, ToType, ThroughType>>
     ) where FieldType == [ToType] {
-        self.init(name.description, at: { type -> (Request, NoArguments) async throws -> [ToType] in
+        self.init(name.description) { type -> (Request, NoArguments) async throws -> [ToType] in
             return { (context: Request, _: NoArguments) async throws in
-                return try await type[keyPath: keyPath].query(on: context.db).all()
+                return try await type[keyPath: keyPath].query(on: context.db).all() // Get the desired property and make the Fluent database query on it
             }
-        })
+        }
     }
 }
 
@@ -66,11 +66,11 @@ public extension Graphiti.Field where Arguments == NoArguments, Context == Reque
         _ name: FieldKey,
         with keyPath: KeyPath<ObjectType, OptionalParentProperty<ObjectType, ParentType>>
     ) where FieldType == ParentType? {
-        self.init(name.description, at: { type -> (Request, NoArguments) async throws -> ParentType? in
+        self.init(name.description) { type -> (Request, NoArguments) async throws -> ParentType? in
             return { (context: Request, _: NoArguments) async throws -> ParentType? in
-                return try await type[keyPath: keyPath].get(on: context.db)
+                return try await type[keyPath: keyPath].get(on: context.db) // Get the desired property and make the Fluent database query on it
             }
-        })
+        }
     }
 }
 
@@ -84,10 +84,10 @@ public extension Graphiti.Field where Arguments == NoArguments, Context == Reque
         _ name: FieldKey,
         with keyPath: KeyPath<ObjectType, OptionalChildProperty<ObjectType, ParentType>>
     ) where FieldType == ParentType? {
-        self.init(name.description, at: { type -> (Request, NoArguments) async throws -> ParentType? in
+        self.init(name.description) { type -> (Request, NoArguments) async throws -> ParentType? in
             return { (context: Request, _: NoArguments) async throws -> ParentType? in
                 return try await type[keyPath: keyPath].get(on: context.db)
             }
-        })
+        }
     }
 }

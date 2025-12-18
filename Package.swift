@@ -19,16 +19,30 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent.git", from: "4.2.0"),
     ],
     targets: [
-        .target(name: "GraphQLKit",
-                dependencies: [
-                    .product(name: "Vapor", package: "vapor"),
-                    .product(name: "Graphiti", package: "Graphiti"),
-                    .product(name: "Fluent", package: "fluent"),
-                ]),
-        .testTarget(name: "GraphQLKitTests",
-                    dependencies: [
-                        .target(name: "GraphQLKit"),
-                        .product(name: "XCTVapor", package: "vapor"),
-                    ]),
+        .target(
+            name: "GraphQLKit",
+            dependencies: [
+                .product(name: "Vapor", package: "vapor"),
+                .product(name: "Graphiti", package: "Graphiti"),
+                .product(name: "Fluent", package: "fluent"),
+            ]
+        ),
+        .testTarget(
+            name: "GraphQLKitTests",
+            dependencies: [
+                .target(name: "GraphQLKit"),
+                .product(name: "VaporTesting", package: "vapor"),
+            ]
+        ),
     ]
 )
+
+let swiftSettings: [SwiftSetting] = [
+    .enableUpcomingFeature("NonIsolatedNonSendingByDefault"),
+]
+
+for target in package.targets {
+    var settings = target.swiftSettings ?? []
+    settings.append(contentsOf: swiftSettings)
+    target.swiftSettings = settings
+}
