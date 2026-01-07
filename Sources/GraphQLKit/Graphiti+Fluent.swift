@@ -3,8 +3,8 @@ import Graphiti
 import Vapor
 
 // Child Relationship
-extension Graphiti.Field where Arguments == NoArguments, Context == Request, ObjectType: Model {
-    /// Creates a GraphQL field for a one-to-many  relationship for Fluent
+public extension Graphiti.Field where Arguments == NoArguments, Context == Request, ObjectType: Model {
+    /// Creates a GraphQL field for a one-to-many relationship for Fluent
     /// - Parameters:
     ///   - name: Filed name
     ///   - keyPath: KeyPath to the @Children property
